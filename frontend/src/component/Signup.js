@@ -35,82 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MultifieldInput = (props) => {
-  const classes = useStyles();
-  const { education, setEducation } = props;
-
-  return (
-    <React.Fragment>
-      {education.map((obj, key) => (
-        <Grid
-          item
-          container
-          className={classes.inputBox}
-          key={key}
-          style={{ paddingLeft: 0, paddingRight: 0 }}
-        >
-          {/* <Grid item xs={6}>
-            <TextField
-              label={`Institution Name #${key + 1}`}
-              value={education[key].institutionName}
-              onChange={(event) => {
-                const newEdu = [...education];
-                newEdu[key].institutionName = event.target.value;
-                setEducation(newEdu);
-              }}
-              variant="outlined"
-            />
-          </Grid> */}
-          {/* <Grid item xs={3}>
-            <TextField
-              label="Start Year"
-              value={obj.startYear}
-              variant="outlined"
-              type="number"
-              onChange={(event) => {
-                const newEdu = [...education];
-                newEdu[key].startYear = event.target.value;
-                setEducation(newEdu);
-              }}
-            />
-          </Grid> */}
-          {/* <Grid item xs={3}>
-            <TextField
-              label="End Year"
-              value={obj.endYear}
-              variant="outlined"
-              type="number"
-              onChange={(event) => {
-                const newEdu = [...education];
-                newEdu[key].endYear = event.target.value;
-                setEducation(newEdu);
-              }}
-            />
-          </Grid> */}
-        </Grid>
-      ))}
-      {/* <Grid item>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() =>
-            setEducation([
-              ...education,
-              {
-                institutionName: "",
-                startYear: "",
-                endYear: "",
-              },
-            ])
-          }
-          className={classes.inputBox}
-        >
-          Add another institution details
-        </Button>
-      </Grid> */}
-    </React.Fragment>
-  );
-};
 
 const Login = (props) => {
   const classes = useStyles();
@@ -123,23 +47,7 @@ const Login = (props) => {
     email: "",
     password: "",
     name: "",
-    education: [],
-    skills: [],
-    resume: "",
-    profile: "",
-    bio: "",
-    contactNumber: "",
   });
-
-  const [phone, setPhone] = useState("");
-
-  const [education, setEducation] = useState([
-    {
-      institutionName: "",
-      startYear: "",
-      endYear: "",
-    },
-  ]);
 
   const [inputErrorHandler, setInputErrorHandler] = useState({
     email: {
@@ -196,18 +104,8 @@ const Login = (props) => {
       }
     });
 
-    console.log(education);
-
     let updatedDetails = {
       ...signupDetails,
-      education: education
-        .filter((obj) => obj.institutionName.trim() !== "")
-        .map((obj) => {
-          if (obj["endYear"] === "") {
-            delete obj["endYear"];
-          }
-          return obj;
-        }),
     };
 
     setSignupDetails(updatedDetails);
@@ -266,17 +164,6 @@ const Login = (props) => {
     let updatedDetails = {
       ...signupDetails,
     };
-    if (phone !== "") {
-      updatedDetails = {
-        ...signupDetails,
-        contactNumber: `+${phone}`,
-      };
-    } else {
-      updatedDetails = {
-        ...signupDetails,
-        contactNumber: "",
-      };
-    }
 
     setSignupDetails(updatedDetails);
 
@@ -389,89 +276,7 @@ const Login = (props) => {
               }
             }}
           />
-        </Grid>
-        {signupDetails.type === "applicant" ? (
-          <React.Fragment>
-            <MultifieldInput
-              education={education}
-              setEducation={setEducation}
-            />
-            {/* <Grid item>
-              <ChipInput
-                className={classes.inputBox}
-                label="Skills"
-                variant="outlined"
-                helperText="Press enter to add skills"
-                onChange={(chips) =>
-                  setSignupDetails({ ...signupDetails, skills: chips })
-                }
-              />
-            </Grid> */}
-            {/* <Grid item>
-              <FileUploadInput
-                className={classes.inputBox}
-                label="Resume (.pdf)"
-                icon={<DescriptionIcon />}
-                // value={files.resume}
-                // onChange={(event) =>
-                //   setFiles({
-                //     ...files,
-                //     resume: event.target.files[0],
-                //   })
-                // }
-                uploadTo={apiList.uploadResume}
-                handleInput={handleInput}
-                identifier={"resume"}
-              />
-            </Grid> */}
-            {/* <Grid item>
-              <FileUploadInput
-                className={classes.inputBox}
-                label="Profile Photo (.jpg/.png)"
-                icon={<FaceIcon />}
-                // value={files.profileImage}
-                // onChange={(event) =>
-                //   setFiles({
-                //     ...files,
-                //     profileImage: event.target.files[0],
-                //   })
-                // }
-                uploadTo={apiList.uploadProfileImage}
-                handleInput={handleInput}
-                identifier={"profile"}
-              />
-            </Grid> */}
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {/* <Grid item style={{ width: "100%" }}>
-              <TextField
-                label="Bio (upto 250 words)"
-                multiline
-                rows={8}
-                style={{ width: "100%" }}
-                variant="outlined"
-                value={signupDetails.bio}
-                onChange={(event) => {
-                  if (
-                    event.target.value.split(" ").filter(function (n) {
-                      return n != "";
-                    }).length <= 250
-                  ) {
-                    handleInput("bio", event.target.value);
-                  }
-                }}
-              />
-            </Grid> */}
-            <Grid item>
-              <PhoneInput
-                country={"in"}
-                value={phone}
-                onChange={(phone) => setPhone(phone)}
-              />
-            </Grid>
-          </React.Fragment>
-        )}
+        </Grid>  
 
         <Grid item>
           <Button

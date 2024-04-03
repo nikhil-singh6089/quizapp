@@ -122,22 +122,22 @@ const CreateQuiz = () => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
         <Dialog open={openQuestionTypeModal} onClose={() => setOpenQuestionTypeModal(false)}>
-  <DialogTitle>Select Question Type</DialogTitle>
-  <DialogContent>
-    <RadioGroup
-      value={questionType}
-      onChange={(e) => setQuestionType(e.target.value)}
-    >
-      <FormControlLabel value="MCQs" control={<Radio />} label="Multiple Choice" />
-      <FormControlLabel value="FillInTheBlank" control={<Radio />} label="Fill in the Blank" />
-      <FormControlLabel value="MatchTheOptions" control={<Radio />} label="Match the Options" />
-    </RadioGroup>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={() => setOpenQuestionTypeModal(false)}>Cancel</Button>
-    <Button onClick={() => handleAddQuestion(questionType)}>Add</Button>
-  </DialogActions>
-</Dialog>
+            <DialogTitle>Select Question Type</DialogTitle>
+            <DialogContent>
+              <RadioGroup
+                value={questionType}
+                onChange={(e) => setQuestionType(e.target.value)}
+              >
+                <FormControlLabel value="MCQs" control={<Radio />} label="Multiple Choice" />
+                <FormControlLabel value="FillInTheBlank" control={<Radio />} label="Fill in the Blank" />
+                <FormControlLabel value="MatchTheOptions" control={<Radio />} label="Match the Options" />
+              </RadioGroup>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={() => setOpenQuestionTypeModal(false)}>Cancel</Button>
+            <Button onClick={() => handleAddQuestion(questionType)}>Add</Button>
+          </DialogActions>
+        </Dialog>
           <TextField
             label="Topic"
             variant="outlined"
