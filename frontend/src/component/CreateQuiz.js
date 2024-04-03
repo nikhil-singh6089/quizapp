@@ -6,6 +6,13 @@ import {
   Container,
   Box,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@material-ui/core';
 import fs from 'fs';
 import path from 'path';
@@ -21,10 +28,36 @@ const CreateQuiz = () => {
   const handleLevelChange = (e) => setLevel(e.target.value);
   const handleTotalQuestionsChange = (e) => setTotalQuestions(parseInt(e.target.value));
   const handlePerQuestionScoreChange = (e) => setPerQuestionScore(parseInt(e.target.value));
+  
+  const [openQuestionTypeModal, setOpenQuestionTypeModal] = useState(false);
+
+  const handleQuestionTypeModalOpen = () => {
+    setOpenQuestionTypeModal(true);
+  };
+
+  const [questionType, setQuestionType] = useState('MCQs');
+
+  const handleAddQuestion = (type) => {
+    let newQuestion;
+    if (type === 'MCQs') {
+      newQuestion = { question: '', choices: [], type, correctAnswer: '' };
+    } else if (type === 'FillInTheBlank') {
+      newQuestion = { question: '', type, correctAnswer: '' };
+    } else if (type === 'MatchTheOptions') {
+      newQuestion = { question: '', options: [], type, correctMatches: [] };
+    }
+    setQuestionType(type);
+    setOpenQuestionTypeModal(false);
+    setQuestions([...questions, newQuestion]);
+  };
 
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index][field] = value;
+    if (field === 'options' || field === 'correctMatches') {
+      updatedQuestions[index][field] = value;
+    } else {
+      updatedQuestions[index][field] = value;
+    }
     setQuestions(updatedQuestions);
   };
 
@@ -88,6 +121,23 @@ const CreateQuiz = () => {
           Create Quiz
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
+        <Dialog open={openQuestionTypeModal} onClose={() => setOpenQuestionTypeModal(false)}>
+  <DialogTitle>Select Question Type</DialogTitle>
+  <DialogContent>
+    <RadioGroup
+      value={questionType}
+      onChange={(e) => setQuestionType(e.target.value)}
+    >
+      <FormControlLabel value="MCQs" control={<Radio />} label="Multiple Choice" />
+      <FormControlLabel value="FillInTheBlank" control={<Radio />} label="Fill in the Blank" />
+      <FormControlLabel value="MatchTheOptions" control={<Radio />} label="Match the Options" />
+    </RadioGroup>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setOpenQuestionTypeModal(false)}>Cancel</Button>
+    <Button onClick={() => handleAddQuestion(questionType)}>Add</Button>
+  </DialogActions>
+</Dialog>
           <TextField
             label="Topic"
             variant="outlined"
@@ -126,42 +176,56 @@ const CreateQuiz = () => {
             Questions
           </Typography>
           {questions.map((question, index) => (
-            <Box key={index} mb={2}>
-              <TextField
-                label={`Question ${index + 1}`}
-                variant="outlined"
-                value={question.question}
-                onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Choices (comma-separated)"
-                variant="outlined"
-                value={question.choices.join(', ')}
-                onChange={(e) => handleQuestionChange(index, 'choices', e.target.value.split(', '))}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Correct Answer"
-                variant="outlined"
-                value={question.correctAnswer}
-                onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => removeQuestion(index)}
-                style={{ marginTop: '10px' }}
-              >
-                Remove Question
-              </Button>
-            </Box>
-          ))}
-          <Button variant="contained" color="primary" onClick={addQuestion}>
+  <Box key={index} mb={2}>
+    <TextField
+      label={`Question ${index + 1}`}
+      variant="outlined"
+      value={question.question}
+      onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+    {question.type === 'MCQs' && (
+      <React.Fragment>
+        <TextField
+          label="Choices (comma-separated)"
+          variant="outlined"
+          value={question.choices.join(', ')}
+          onChange={(e) => handleQuestionChange(index, 'choices', e.target.value.split(', '))}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Correct Answer"
+          variant="outlined"
+          value={question.correctAnswer}
+          onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+      </React.Fragment>
+    )}
+    {question.type === 'FillInTheBlank' && (
+      <TextField
+        label="Correct Answer"
+        variant="outlined"
+        value={question.correctAnswer}
+        onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    )}
+    <Button
+      variant="contained"
+      color="secondary"
+      onClick={() => removeQuestion(index)}
+      style={{ marginTop: '10px' }}
+    >
+      Remove Question
+    </Button>
+  </Box>
+))}
+          <Button variant="contained" color="primary" onClick={handleQuestionTypeModalOpen}>
             Add Question
           </Button>
           <Box mt={2}>
