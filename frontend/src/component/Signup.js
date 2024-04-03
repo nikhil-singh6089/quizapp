@@ -12,12 +12,10 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
 
 import PasswordInput from "../lib/PasswordInput";
 import EmailInput from "../lib/EmailInput";
-import FileUploadInput from "../lib/FileUploadInput";
 import { SetPopupContext } from "../App";
 
 import apiList from "../lib/apiList";
