@@ -1,19 +1,23 @@
 from rest_framework import serializers
-from ..models import Quiz, Question, Answer
+from ..models import Question, Choice, Quiz
 
-class QuizSerializer(serializers.ModelSerializer):
+class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Quiz
-        fields = '__all__'
+        model = Choice
+        fields = ['choice_text', 'is_correct']
 
 class QuestionSerializer(serializers.ModelSerializer):
+    choices = ChoiceSerializer(many=True, read_only=True)
+
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['question_text', 'choices']
 
-class AnswerSerializer(serializers.ModelSerializer):
+class QuizSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Answer
-        fields = '__all__'
+        model = Quiz
+        fields = ['topic', 'level', 'total_questions', 'per_question_score', 'questions']
 
 
