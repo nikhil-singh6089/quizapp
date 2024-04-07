@@ -1,15 +1,17 @@
 from django.db import models
+import uuid
 
 # Create your models here.
 
 class Quiz(models.Model):
-    topic = models.CharField(max_length=100)
-    level = models.CharField(max_length=50)
-    total_questions = models.PositiveIntegerField()
-    per_question_score = models.PositiveIntegerField()
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    topic = models.CharField(null=True, max_length=100)
+    level = models.CharField(null=True, max_length=50)
+    total_questions = models.PositiveIntegerField(default=0)
+    per_question_score = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.topic
+        return f"{self.topic} ({self.id})"
 
 class Question(models.Model):
     QUESTION_TYPES = (
@@ -17,12 +19,12 @@ class Question(models.Model):
         ('TF', 'True/False'),
         ('SA', 'Short Answer'),
     )
-
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
-    question_text = models.TextField()
-    question_type = models.CharField(max_length=4, choices=QUESTION_TYPES)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions', null=True)
+    question = models.TextField()
+    type = models.CharField(max_length=4, choices=QUESTION_TYPES, default='MCQs')
     choices = models.JSONField(null=True, blank=True)
-    correct_answer = models.CharField(max_length=200)
+    correctAnswer = models.CharField(null=True, max_length=200)
 
     def __str__(self):
-        return self.question_text
+        return self.question

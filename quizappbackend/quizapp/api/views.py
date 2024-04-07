@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from ..models import Quiz, Question
 from .serializers import QuizSerializer, QuestionSerializer
 
@@ -21,6 +22,9 @@ class QuizViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    def retrieve(self, request, pk=None):
+        quiz = get_object_or_404(Quiz, pk=pk)
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
 
 

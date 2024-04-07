@@ -14,8 +14,7 @@ import {
   FormControlLabel,
   Radio,
 } from '@material-ui/core';
-import fs from 'fs';
-import path from 'path';
+import axios from 'axios';
 
 const CreateQuiz = () => {
   const [topic, setTopic] = useState('');
@@ -61,9 +60,6 @@ const CreateQuiz = () => {
     setQuestions(updatedQuestions);
   };
 
-  const addQuestion = () => {
-    setQuestions([...questions, { question: '', choices: [], type: 'MCQs', correctAnswer: '' }]);
-  };
 
   const removeQuestion = (index) => {
     const updatedQuestions = [...questions];
@@ -92,6 +88,16 @@ const CreateQuiz = () => {
       perQuestionScore,
       questions,
     };
+    axios
+      .post('/api/quiz/', quizData)
+      .then(response => {
+        // Handle the response data
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle the error
+        console.error(error);
+      });
     // const questionsFilePath = path.join(__dirname, '../questions.js');
 
     // // Read the existing content of the questions.js file
