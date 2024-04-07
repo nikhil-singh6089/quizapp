@@ -2,20 +2,27 @@ from django.db import models
 
 # Create your models here.
 
-class Topic(models.Model):
-    name = models.CharField(max_length=100)
+class Quiz(models.Model):
+    topic = models.CharField(max_length=100)
+    level = models.CharField(max_length=50)
+    total_questions = models.PositiveIntegerField()
+    per_question_score = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.topic
 
 class Question(models.Model):
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    QUESTION_TYPES = (
+        ('MCQs', 'Multiple Choice'),
+        ('TF', 'True/False'),
+        ('SA', 'Short Answer'),
+    )
+
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
     question_text = models.TextField()
+    question_type = models.CharField(max_length=4, choices=QUESTION_TYPES)
+    choices = models.JSONField(null=True, blank=True)
+    correct_answer = models.CharField(max_length=200)
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=100)
-    is_correct = models.BooleanField(default=False)
-
-class Quiz(models.Model):
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    level = models.CharField(max_length=100)
-    total_questions = models.IntegerField()
-    per_question_score = models.IntegerField()
+    def __str__(self):
+        return self.question_text
