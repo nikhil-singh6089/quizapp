@@ -54,12 +54,14 @@ const CreateQuiz = () => {
     const updatedQuestions = [...questions];
     if (field === 'options' || field === 'correctMatches') {
       updatedQuestions[index][field] = value;
+    } else if (field === 'choices') {
+      // Split the comma-separated string into an array of strings
+      updatedQuestions[index][field] = value.split(',').map(choice => choice.trim());
     } else {
       updatedQuestions[index][field] = value;
     }
     setQuestions(updatedQuestions);
   };
-
 
   const removeQuestion = (index) => {
     const updatedQuestions = [...questions];
@@ -88,8 +90,10 @@ const CreateQuiz = () => {
       perQuestionScore,
       questions,
     };
+    console.log(newQuiz);
+
     axios
-      .post('/api/quiz/', quizData)
+      .post('http://localhost:8000/api/quiz/', newQuiz)
       .then(response => {
         // Handle the response data
         console.log(response.data);
@@ -98,6 +102,7 @@ const CreateQuiz = () => {
         // Handle the error
         console.error(error);
       });
+
     // const questionsFilePath = path.join(__dirname, '../questions.js');
 
     // // Read the existing content of the questions.js file
@@ -196,8 +201,8 @@ const CreateQuiz = () => {
         <TextField
           label="Choices (comma-separated)"
           variant="outlined"
-          value={question.choices.join(', ')}
-          onChange={(e) => handleQuestionChange(index, 'choices', e.target.value.split(', '))}
+          value={questions[index].choices}  // Use the state value directly
+          onChange={(e) => handleQuestionChange(index, 'choices', e.target.value)}
           fullWidth
           margin="normal"
         />

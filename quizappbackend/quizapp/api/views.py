@@ -26,5 +26,24 @@ class QuizViewSet(viewsets.ViewSet):
         quiz = get_object_or_404(Quiz, pk=pk)
         serializer = QuizSerializer(quiz)
         return Response(serializer.data)
+    
+    def destroy(self, request, pk=None):
+        try:
+            quiz = get_object_or_404(Quiz, pk=pk)
+        except Quiz.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        quiz.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def retrieveAll(self, request):
+        quiz = Quiz.objects.all()
+        serializer = QuizSerializer(quiz, many=True)
+        return Response(serializer.data)
+    
+    def deleteAll(self, request):
+        queryset = Quiz.objects.all()
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
