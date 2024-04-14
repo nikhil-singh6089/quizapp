@@ -7,7 +7,6 @@ import {
 } from "@material-ui/core";
 import React from 'react';
 import { useHistory } from "react-router-dom";
-
 import isAuth, { userType } from "../lib/isAuth";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,37 +30,37 @@ const Navbar = (props) => {
     history.push(location);
   };
 
+  const handleSignOut = () => {
+    // Remove user data from local storage
+    localStorage.removeItem('useremail');
+    localStorage.removeItem('userrole');
+    localStorage.removeItem('username');
+    localStorage.removeItem('useruuid');
+    // Redirect to the login page
+    history.push('/login');
+  };
+
+  const username = localStorage.getItem('username');
+
   return (
     <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           <Button color="inherit" onClick={() => handleClick("/")}>Quizzzz</Button>
         </Typography>
-        {isAuth() ? (
-          userType() === "teacher" ? (
-            <React.Fragment>
-              <Button color="inherit" onClick={() => handleClick("/logout")}>
-                Logout
-              </Button>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <Button color="inherit" onClick={() => handleClick("/home")}>
-                Home
-              </Button>
-              <Button color="inherit" onClick={() => handleClick("/logout")}>
-                Logout
-              </Button>
-
-
-
-            </React.Fragment>
-          )
+        {username ? (
+          <React.Fragment>
+            <Typography variant="subtitle1" style={{ marginRight: '16px' }}>
+              Welcome, {username}
+            </Typography>
+            <Button color="inherit" onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </React.Fragment>
         ) : (
           <React.Fragment>
-
             <Button color="inherit" onClick={() => handleClick("/login")}>
-              Logins
+              Login
             </Button>
             <Button color="inherit" onClick={() => handleClick("/signup")}>
               Signup

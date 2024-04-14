@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
-import React from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 import {
   Grid,
   TextField,
@@ -8,15 +9,8 @@ import {
   makeStyles,
   Paper,
 } from "@material-ui/core";
-import axios from "axios";
-import { Redirect } from "react-router-dom";
-
-import PasswordInput from "../lib/PasswordInput";
-import EmailInput from "../lib/EmailInput";
-import { SetPopupContext } from "../App";
 
 import apiList from "../lib/apiList";
-import isAuth from "../lib/isAuth";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -30,83 +24,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = (props) => {
+const Login = () => {
   const classes = useStyles();
-  const setPopup = useContext(SetPopupContext);
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const [loggedin, setLoggedin] = useState(isAuth());
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const [loginDetails, setLoginDetails] = useState({
-    email: "",
-    password: "",
-  });
+    try {
+      // Check if the user with the provided email exists
+      const userResponse = await axios.get(`${apiList.user}/${email}/`);
+      const user = userResponse.data;
 
-  const [inputErrorHandler, setInputErrorHandler] = useState({
-    email: {
-      error: false,
-      message: "",
-    },
-    password: {
-      error: false,
-      message: "",
-    },
-  });
+      // Verify the password
+      const verifyResponse = await axios.get(`${apiList.verify}/${user.id}/${ password }/`);
 
-  const handleInput = (key, value) => {
-    setLoginDetails({
-      ...loginDetails,
-      [key]: value,
-    });
-  };
+      if (verifyResponse.data.success === "Password is valid") {
 
-  const handleInputError = (key, status, message) => {
-    setInputErrorHandler({
-      ...inputErrorHandler,
-      [key]: {
-        error: status,
-        message: message,
-      },
-    });
-  };
+        localStorage.setItem('useremail', user.email);
+        localStorage.setItem('useruuid', user.uuid);
+        localStorage.setItem('username', user.name);
+        localStorage.setItem('userrole', user.role);
 
-  const handleLogin = () => {
-    const verified = !Object.keys(inputErrorHandler).some((obj) => {
-      return inputErrorHandler[obj].error;
-    });
-    if (verified) {
-      axios
-        .post(apiList.login, loginDetails)
-        .then((response) => {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("type", response.data.type);
-          setLoggedin(isAuth());
-          setPopup({
-            open: true,
-            severity: "success",
-            message: "Logged in successfully",
-          });
-          console.log(response);
-        })
-        .catch((err) => {
-          setPopup({
-            open: true,
-            severity: "error",
-            message: err.response.data.message,
-          });
-          console.log(err.response);
-        });
-    } else {
-      setPopup({
-        open: true,
-        severity: "error",
-        message: "Incorrect Input",
-      });
+        // Password is valid, redirect based on the user's role
+        if (user.role === "faculty") {
+          history.push("/Faculty");
+        } else if (user.role === "student") {
+          history.push("/Student");
+        }
+      } else {
+        setError("Invalid password");
+      }
+    } catch (err) {
+      setError(err.response.data.error || "An error occurred");
     }
   };
 
-  return loggedin ? (
-    <Redirect to="/" />
-  ) : (
+  return (
     <Paper elevation={3} className={classes.body}>
       <Grid container direction="column" spacing={4} alignItems="center">
         <Grid item>
@@ -114,21 +71,27 @@ const Login = (props) => {
             Login
           </Typography>
         </Grid>
+        {error && (
+          <Grid item>
+            <Typography variant="body1" color="error">
+              {error}
+            </Typography>
+          </Grid>
+        )}
         <Grid item>
-          <EmailInput
+          <TextField
             label="Email"
-            value={loginDetails.email}
-            onChange={(event) => handleInput("email", event.target.value)}
-            inputErrorHandler={inputErrorHandler}
-            handleInputError={handleInputError}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className={classes.inputBox}
           />
         </Grid>
         <Grid item>
-          <PasswordInput
+          <TextField
             label="Password"
-            value={loginDetails.password}
-            onChange={(event) => handleInput("password", event.target.value)}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className={classes.inputBox}
           />
         </Grid>
@@ -136,7 +99,7 @@ const Login = (props) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handleLogin()}
+            onClick={handleSubmit}
             className={classes.submitButton}
           >
             Login

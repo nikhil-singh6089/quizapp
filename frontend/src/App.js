@@ -8,6 +8,8 @@ import Login from "./component/Login";
 import Logout from "./component/Logout";
 import Signup from "./component/Signup";
 import CreateQuiz from "./component/CreateQuiz";
+import Student from "./component/Student";
+import Faculty from "./component/Faculty";
 import Quiz from "./component/Quiz";
 import MessagePopup from "./lib/MessagePopup";
 import isAuth, { userType } from "./lib/isAuth";
@@ -61,6 +63,12 @@ function App() {
               </Route>
               <Route exact path="/takeQuiz">
                 <Quiz />
+              </Route>
+              <Route exact path="/student">
+                <Student />
+              </Route>
+              <Route exact path="/faculty">
+                <Faculty />
               </Route>
             </Switch>
           </Grid>
