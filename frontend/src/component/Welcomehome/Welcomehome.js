@@ -33,24 +33,6 @@ return(
                     Millions of people are searching for Quiz maker for creating the online Quiz.
                 </p>
                 <p className="home-description">Make Quiz for Test and Check Knowledge</p>
-              <Button style={{
-                    backgroundColor: 'blue',
-                    color: 'white',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                }}
-                className="create-quiz-button" onClick={() => handleClick("/createQuiz")}>
-                CreateQuiz
-              </Button>
-              <Button style={{
-                    backgroundColor: 'blue',
-                    color: 'white',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                }}
-                className="take-quiz-button" onClick={() => handleClick("/takeQuiz")}>
-                Take Quiz
-              </Button>
             </div>
         </div>
     </React.Fragment>

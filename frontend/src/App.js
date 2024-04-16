@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, useHistory} from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 import React from 'react';
 import Welcomehome from "./component/Welcomehome/Welcomehome";
@@ -11,9 +11,7 @@ import CreateQuiz from "./component/CreateQuiz";
 import Student from "./component/Student";
 import Faculty from "./component/Faculty";
 import Quiz from "./component/Quiz";
-import MessagePopup from "./lib/MessagePopup";
-import isAuth, { userType } from "./lib/isAuth";
-import { Create } from "@material-ui/icons";
+import MessagePopup from "./lib/MessagePopup";``
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -37,12 +35,15 @@ function App() {
     severity: "",
     message: "",
   });
+
+
+  
   return (
     <BrowserRouter>
       <SetPopupContext.Provider value={setPopup}>
         <Grid container direction="column">
           <Grid item xs>
-            <Navbar />
+            <Navbar/>
           </Grid>
           <Grid item className={classes.body}>
             <Switch>

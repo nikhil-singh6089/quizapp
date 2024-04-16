@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+import { Grid, TextField, Button, makeStyles  } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+    inputContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: theme.spacing(2),
+    },
+  }));
 
 const Student = () => {
     const [quizTaken, setQuizTaken] = useState([]);
     const [quizToken, setQuizToken] = useState('');
     let history = useHistory();
+    const classes = useStyles();
     
     const handleClick = (location, data) => {
         console.log(location);
@@ -39,39 +48,35 @@ const Student = () => {
 
 
     return (
-        <div>
-            <div>
-                <h2>Quizzes Taken</h2>
-                {/* Render the list of quizzes taken */}
-                {quizTaken.map((quiz, index) => (
-                    <div key={index}>
-                        {/* Display quiz details */}
-                        <p>{quiz.title}</p>
-                        {/* Add more details as per your requirements */}
-                    </div>
-                ))}
-            </div>
-            <div>
-                <h2>Take Quiz</h2>
-                <input
-                    type="text"
-                    value={quizToken}
-                    onChange={handleQuizTokenChange}
-                    placeholder="Enter quiz token"
-                />
-                <button onClick={handleQuizSubmission}>Submit</button>
-                <Button style={{
-                    backgroundColor: 'blue',
-                    color: 'white',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                }}
-                className="take-quiz-button" onClick={() => handleClick("/takeQuiz", quizToken)}>
-                Take Quiz
-              </Button>
-            </div>
-        </div>
-    );
-};
+        <Grid container className={classes.inputContainer}>
+          <TextField
+            type="text"
+            value={quizToken}
+            onChange={handleQuizTokenChange}
+            placeholder="Enter quiz token"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleQuizSubmission}
+            style={{ marginLeft: 10 }}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className="take-quiz-button"
+            onClick={handleClick}
+            style={{ marginLeft: 10 }}
+          >
+            Take Quiz
+          </Button>
+        </Grid>
+      );
+    };
 
 export default Student;
