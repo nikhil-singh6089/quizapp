@@ -3,7 +3,7 @@ import axios from 'axios'
 import './Quiz.css'
 
 
-const Quiz = () => {
+const Quiz = (props) => {
 
   const [quizData, setQuizData] = useState(
     {
@@ -38,6 +38,8 @@ const Quiz = () => {
     correctAnswers: 0,
     wrongAnswers: 0,
   });
+  const quizToken = localStorage.getItem('usertoken');
+  console.log("Quiz token:", quizToken);
   
   // works but quizData stays null
   // code also goes in infinite loop 
@@ -54,7 +56,8 @@ const Quiz = () => {
     console.log("Fetching quiz data..."); // why is this not logging fuck useEffect
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/quiz/448e2784-68b9-4496-a75e-1b797f49a1b1/');
+        const quizToken = localStorage.getItem('usertoken');
+        const response = await axios.get(`http://localhost:8000/api/quiz/${localStorage.getItem('usertoken')}/`);
         console.log("Quiz data response:", response.data);
         setQuizData(response.data);
       } catch (error) {
@@ -66,7 +69,7 @@ const Quiz = () => {
   }, []);
 
   const { questions } = quizData;
-    const { question, choices } = questions[activeQuestion] || {};
+  const { question, choices } = questions[activeQuestion] || {};
 
     const onClickNext = () => {
       setSelectedAnswerIndex(null)
@@ -89,7 +92,9 @@ const Quiz = () => {
 
   const onAnswerSelected = (answer, index) => {
       setSelectedAnswerIndex(index)
-      if (answer === question.correctAnswer) {
+      console.log("Selected answer:", answer);
+      console.log("question", questions[activeQuestion]);
+      if (answer === questions[activeQuestion].correctAnswer) {
         setSelectedAnswer(true)
       } else {
         setSelectedAnswer(false)

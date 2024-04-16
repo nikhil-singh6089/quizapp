@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 
@@ -7,9 +8,19 @@ const Student = () => {
     const [quizToken, setQuizToken] = useState('');
     let history = useHistory();
     
-    const handleClick = (location) => {
+    const handleClick = (location, data) => {
         console.log(location);
-        history.push(location);
+        console.log(data);
+        history.push({
+            pathname: location,
+            state: {quizToken: quizToken}, // Pass data as state
+        });
+    };
+
+    const handleQuizTokenChange = (e) => {
+        const token = e.target.value;
+        setQuizToken(token);
+        localStorage.setItem('quizToken', token); // Update local storage
     };
 
     // Fetch the list of quizzes taken by the student
@@ -21,6 +32,9 @@ const Student = () => {
     // Function to handle quiz submission using a token
     const handleQuizSubmission = () => {
         // Your logic to handle quiz submission using the `quizToken`
+        localStorage.setItem('usertoken', quizToken);
+        //setQuizToken(quizToken);
+        console.log(quizToken);
     };
 
 
@@ -42,7 +56,7 @@ const Student = () => {
                 <input
                     type="text"
                     value={quizToken}
-                    onChange={(e) => setQuizToken(e.target.value)}
+                    onChange={handleQuizTokenChange}
                     placeholder="Enter quiz token"
                 />
                 <button onClick={handleQuizSubmission}>Submit</button>
@@ -52,7 +66,7 @@ const Student = () => {
                     padding: '10px 20px',
                     fontSize: '16px',
                 }}
-                className="take-quiz-button" onClick={() => handleClick("/takeQuiz")}>
+                className="take-quiz-button" onClick={() => handleClick("/takeQuiz", quizToken)}>
                 Take Quiz
               </Button>
             </div>

@@ -31,12 +31,12 @@ const Navbar = (props) => {
   };
 
   const handleSignOut = () => {
-    // Remove user data from local storage
+
     localStorage.removeItem('useremail');
     localStorage.removeItem('userrole');
     localStorage.removeItem('username');
     localStorage.removeItem('useruuid');
-    // Redirect to the login page
+
     history.push('/login');
   };
 
