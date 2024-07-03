@@ -1,5 +1,5 @@
-import { createContext, useState } from "react";
-import { BrowserRouter, Switch, Route, useHistory} from "react-router-dom";
+import { createContext, useState, useEffect } from "react";
+import { BrowserRouter, Switch, Route, useHistory,useLocation} from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 import React from 'react';
 import Welcomehome from "./component/Welcomehome/Welcomehome";
@@ -36,14 +36,18 @@ function App() {
     message: "",
   });
 
+  const [username, setUsername] = useState(localStorage.getItem('username'));
 
+  useEffect(() => {
+    setUsername(localStorage.getItem('username'));
+  }, []);
   
   return (
     <BrowserRouter>
       <SetPopupContext.Provider value={setPopup}>
         <Grid container direction="column">
           <Grid item xs>
-            <Navbar/>
+            <Navbar  username={username} setUsername={setUsername}/>
           </Grid>
           <Grid item className={classes.body}>
             <Switch>

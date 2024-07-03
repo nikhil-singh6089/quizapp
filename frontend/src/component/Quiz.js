@@ -1,4 +1,5 @@
 import React,{useState , useEffect} from 'react'
+import { useLocation } from 'react-router-dom';
 import axios from 'axios'
 import './Quiz.css'
 
@@ -38,13 +39,13 @@ const Quiz = (props) => {
     correctAnswers: 0,
     wrongAnswers: 0,
   });
-  const quizToken = localStorage.getItem('usertoken');
-  console.log("Quiz token:", quizToken);
+  const location = useLocation();
+  const quizToken = location.state.quizToken || localStorage.getItem('usertoken');
   
   // works but quizData stays null
   // code also goes in infinite loop 
 
-  // axios.get('http://localhost:8000/api/quiz/f3e819d7-b3fb-43bc-9434-a988f73d4fa7/')
+  // axios.get(`http://localhost:8000/api/quiz/${quizToken}/`)
   //       .then((res) => {
   //         const data = res.data;
   //         setQuizData(data);
@@ -56,8 +57,8 @@ const Quiz = (props) => {
     console.log("Fetching quiz data..."); // why is this not logging fuck useEffect
     const fetchQuizData = async () => {
       try {
-        const quizToken = localStorage.getItem('usertoken');
-        const response = await axios.get(`http://localhost:8000/api/quiz/${localStorage.getItem('usertoken')}/`);
+        // const quizToken = localStorage.getItem('usertoken');
+        const response = await axios.get(`http://localhost:8000/api/quiz/${quizToken}/`);
         console.log("Quiz data response:", response.data);
         setQuizData(response.data);
       } catch (error) {

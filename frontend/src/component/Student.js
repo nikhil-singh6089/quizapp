@@ -12,19 +12,11 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const Student = () => {
-    const [quizTaken, setQuizTaken] = useState([]);
     const [quizToken, setQuizToken] = useState('');
     let history = useHistory();
     const classes = useStyles();
     
-    const handleClick = (location, data) => {
-        console.log(location);
-        console.log(data);
-        history.push({
-            pathname: location,
-            state: {quizToken: quizToken}, // Pass data as state
-        });
-    };
+    
 
     const handleQuizTokenChange = (e) => {
         const token = e.target.value;
@@ -40,41 +32,32 @@ const Student = () => {
 
     // Function to handle quiz submission using a token
     const handleQuizSubmission = () => {
-        // Your logic to handle quiz submission using the `quizToken`
-        localStorage.setItem('usertoken', quizToken);
-        //setQuizToken(quizToken);
-        console.log(quizToken);
+        history.push({
+          pathname: '/takeQuiz',
+          state: { quizToken: quizToken }, // Pass data as state
+      });
     };
 
 
     return (
         <Grid container className={classes.inputContainer}>
           <TextField
-            type="text"
-            value={quizToken}
-            onChange={handleQuizTokenChange}
-            placeholder="Enter quiz token"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleQuizSubmission}
-            style={{ marginLeft: 10 }}
-          >
-            Submit
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className="take-quiz-button"
-            onClick={handleClick}
-            style={{ marginLeft: 10 }}
-          >
-            Take Quiz
-          </Button>
+                type="text"
+                value={quizToken}
+                onChange={handleQuizTokenChange}
+                placeholder="Enter quiz token"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleQuizSubmission}
+                style={{ marginLeft: 10 }}
+            >
+                Submit
+            </Button>
         </Grid>
       );
     };

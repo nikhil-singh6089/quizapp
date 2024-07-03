@@ -22,6 +22,7 @@ const CreateQuiz = () => {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [perQuestionScore, setPerQuestionScore] = useState(0);
   const [questions, setQuestions] = useState([]);
+  const [quizId, setQuizId] = useState('');
 
   const handleTopicChange = (e) => setTopic(e.target.value);
   const handleLevelChange = (e) => setLevel(e.target.value);
@@ -96,7 +97,8 @@ const CreateQuiz = () => {
       .post('http://localhost:8000/api/quiz/', newQuiz)
       .then(response => {
         // Handle the response data
-        console.log(response.data);
+        console.log(response.data.id);
+        setQuizId(response.data.id);
       })
       .catch(error => {
         // Handle the error
@@ -243,6 +245,7 @@ const CreateQuiz = () => {
             <Button variant="contained" color="primary" type="submit">
               Save Quiz
             </Button>
+            {quizId && <p>Quiz created with ID: {quizId} : save it and share it to students</p>}
           </Box>
         </Box>
       </Paper>

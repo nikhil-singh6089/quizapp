@@ -5,7 +5,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import React from 'react';
+import React ,{ useState, useEffect }from 'react';
 import { useHistory } from "react-router-dom";
 import isAuth, { userType } from "../lib/isAuth";
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = (props) => {
+const Navbar = ({ username, setUsername }) => {
   const classes = useStyles();
   let history = useHistory();
 
@@ -36,11 +36,11 @@ const Navbar = (props) => {
     localStorage.removeItem('userrole');
     localStorage.removeItem('username');
     localStorage.removeItem('useruuid');
-
+    setUsername(null);  
     history.push('/login');
   };
 
-  const username = localStorage.getItem('username');
+  //const username = localStorage.getItem('username');
 
   return (
     <AppBar position="fixed">

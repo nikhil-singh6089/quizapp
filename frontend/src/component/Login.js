@@ -30,6 +30,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem('username'));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +49,8 @@ const Login = () => {
         localStorage.setItem('useruuid', user.uuid);
         localStorage.setItem('username', user.name);
         localStorage.setItem('userrole', user.role);
+
+        setUsername(user.name);
 
         // Password is valid, redirect based on the user's role
         if (user.role === "faculty") {

@@ -28,7 +28,7 @@ return(
     <React.Fragment>
         <div className="home-container">
             <div className="home-content">
-                <h1 className="home-heading">Make a online Quiz For Test The Students Skill</h1>
+                <h1 className="home-heading">Make a online Quiz to Test The Students Skill</h1>
                 <p className="home-description">
                     Millions of people are searching for Quiz maker for creating the online Quiz.
                 </p>
